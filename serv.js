@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { error } from 'console';
 import { WebSocketServer } from 'ws';
 

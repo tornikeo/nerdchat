@@ -1,18 +1,25 @@
 {
-  "dependencies": {
-    "ws": "^8.18.3"
-  },
-  "type": "module",
   "name": "nerdchat",
   "version": "1.0.0",
-  "description": "This is a CLI that allows two way chat communication between friends over websockets.",
+  "description": "This is a CLI that allows two way chat communication between friends over websockets sharing a LAN.",
+  "type": "module",
   "main": "client.js",
-  "devDependencies": {},
+  "bin": {
+    "nerdchat": "./chat.js",
+    "nerdserv": "./serv.js"
+  },
+  "files": [
+    "chat.js",
+    "serv.js"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
 }

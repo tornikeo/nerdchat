@@ -1,4 +1,4 @@
-// ...existing code...
+#!/usr/bin/env node
 import WebSocket from 'ws';
 import readline from 'readline';
 
