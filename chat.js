@@ -10,16 +10,33 @@ function ask(question) {
 
 // simple arg parser: supports --server-url ws://192.168.1.2:3831
 function getArg(name) {
-  if (process.argv.length < 3) {
-    throw Error("Invalid args - expected `--server-url ws://192.168.1.2:3831` or similar")
+  // support: --server-url=ws://host:port  or  --server-url ws://host:port
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === '-h' || a === '--help') {
+      return 'HELP';
+    }
+    if (a.startsWith(`${name}=`)) return a.split('=')[1];
+    if (a === name && args[i + 1]) return args[i + 1];
   }
-  const a = process.argv[2];
-  if (a.startsWith(`${name}=`)) 
-    return a.split('=')[1];
-  throw Error("Invalid args - expected `--server-url ws://192.168.1.2:3831` or similar")
+  return null;
 }
 
-const serverUrl = getArg('--server-url') || 'ws://127.0.0.1:3831';
+const rawArg = getArg('--server-url');
+if (rawArg === 'HELP') {
+  console.log(`Usage: nerdchat --server-url=ws://host:port
+
+Options:
+  --server-url <url>    WebSocket URL of the server (ws://host:port)
+  -h, --help            Show this help
+
+Example:
+  nerdchat --server-url=ws://192.168.1.42:3831
+`);
+  process.exit(0);
+}
+const serverUrl = rawArg || 'ws://127.0.0.1:3831';
 
 // ...existing code...
 (async () => {

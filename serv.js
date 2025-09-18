@@ -1,8 +1,33 @@
 #!/usr/bin/env node
-import { error, log } from 'console';
+import { error } from 'console';
 import { WebSocketServer } from 'ws';
+// simple arg parser and help support
+function getArg(name) {
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    const a = args[i];
+    if (a === '-h' || a === '--help') return 'HELP';
+    if (a.startsWith(`${name}=`)) return a.split('=')[1];
+    if (a === name && args[i + 1]) return args[i + 1];
+  }
+  return null;
+}
 
-const PORT = 3831;
+if (getArg('-h') === 'HELP' || getArg('--help') === 'HELP') {
+  console.log(`Usage: nerdserv [options]
+
+Options:
+  --port, -p <port>    Port to listen on (default: 3831)
+  -h, --help           Show this help
+
+Example:
+  nerdserv --port 3831
+`);
+  process.exit(0);
+}
+
+const rawPort = getArg('--port') || getArg('-p');
+const PORT = rawPort ? parseInt(rawPort, 10) || 3831 : 3831;
 const wss = new WebSocketServer({ port: PORT });
 
 wss.on('connection', (ws, req) => {
@@ -29,6 +54,8 @@ wss.on('connection', (ws, req) => {
 
   ws.on('close', () => console.log('client disconnected'));
 });
+
+console.log(`WebSocket server listening on ws://0.0.0.0:${PORT}`);
 
 
 // print copyable command for remote CLI

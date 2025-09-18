@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This is a CLI that allows two way chat communication between friends over websockets sharing a LAN.",
   "type": "module",
-  "main": "client.js",
+  "main": "chat.js",
   "bin": {
     "nerdchat": "./chat.js",
     "nerdserv": "./serv.js"
