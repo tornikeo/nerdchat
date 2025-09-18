@@ -30,3 +30,30 @@ wss.on('connection', (ws, req) => {
 });
 
 console.log(`WebSocket server listening on ws://0.0.0.0:${PORT}`);
+
+// print copyable command for remote CLI
+import os from 'os';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function getLocalIPv4() {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) return net.address;
+    }
+  }
+  return '127.0.0.1';
+}
+
+const localIp = getLocalIPv4();
+const relCmd = `node chat.js --server-url=ws://${localIp}:${PORT}`;
+
+console.log('');
+console.log('Give this command to the person on the other laptop:');
+console.log('');
+console.log(`  ${relCmd}`);
+console.log('');
