@@ -21,9 +21,9 @@ nerdserv
 This should print (with a different IP)
 
 ```sh
-WebSocket server listening on ws://0.0.0.0:3831
-Give this command to the person on the other laptop:
-  nerdchat --server-url=ws://10.21.72.193:3831
+To serve, allow 3831 port via 'sudo ufw allow 3831/tcp' first
+Server is up. Give this command to the person next to you:
+nerdchat --server-url=ws://10.21.72.193:3831
 ```
 
 ## Chat
