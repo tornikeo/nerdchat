@@ -1,19 +1,32 @@
-import { log } from "console";
-import { WebSocketServer } from "ws";
+import { error } from 'console';
+import { WebSocketServer } from 'ws';
 
-const wss = new WebSocketServer({host: '0.0.0.0', port: 8080});
+const PORT = 3831;
+const wss = new WebSocketServer({ port: PORT });
 
-wss.on('connection', function connection(ws, req) {
-  const ip = req.socket.remoteAddress;
-  log(`connection from ${ip}`)
-  
-  ws.on('error', console.error);
-  
-  ws.on('message', function message(data, isBinary) {
-    log(`received ${data} isBinary=${isBinary}`);
+wss.on('connection', (ws, req) => {
+  console.log('client connected:', req.socket.remoteAddress);
+
+  ws.on('message', (data) => {
+    // expect JSON messages { type, name, text }
+    let msg;
+    try { msg = JSON.parse(data.toString()); } catch(err) { 
+      error(`error ${err}`); return; }
+
+    // broadcast to all connected clients
+    const out = JSON.stringify({
+      from: msg.name || 'unknown',
+      type: msg.type || 'message',
+      text: msg.text || '',
+      ts: Date.now()
+    });
+
+    for (const client of wss.clients) {
+      if (client.readyState === client.OPEN) client.send(out);
+    }
   });
 
-  ws.send('something')
+  ws.on('close', () => console.log('client disconnected'));
 });
 
-console.log(`listening on ws://${wss.options.host}:${wss.options.port}`);
+console.log(`WebSocket server listening on ws://0.0.0.0:${PORT}`);
