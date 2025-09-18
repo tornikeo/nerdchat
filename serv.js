@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { error } from 'console';
+import { error, log } from 'console';
 import { WebSocketServer } from 'ws';
 
 const PORT = 3831;
@@ -30,7 +30,6 @@ wss.on('connection', (ws, req) => {
   ws.on('close', () => console.log('client disconnected'));
 });
 
-console.log(`WebSocket server listening on ws://0.0.0.0:${PORT}`);
 
 // print copyable command for remote CLI
 import os from 'os';
@@ -38,7 +37,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 function getLocalIPv4() {
   const nets = os.networkInterfaces();
@@ -51,10 +49,8 @@ function getLocalIPv4() {
 }
 
 const localIp = getLocalIPv4();
-const relCmd = `node chat.js --server-url=ws://${localIp}:${PORT}`;
+const relCmd = `nerdchat --server-url=ws://${localIp}:${PORT}`;
 
-console.log('');
-console.log('Give this command to the person on the other laptop:');
-console.log('');
-console.log(`  ${relCmd}`);
-console.log('');
+console.log(`To serve, allow 3831 port via 'sudo ufw allow 3831/tcp' first`);
+console.log('Server is up. Give this command to the person next to you:');
+console.log(`${relCmd}`);
